@@ -41,7 +41,7 @@ func (c *HTML) Render() string {
 	head := NewHead()
 	html := &Component{TagName: "html"}
 
-	head.AddChild(NewScript().Src("/static/vue.global.js"))
+	head.AddChild(NewScript().Src("/static/vue.global.prod.js"))
 
 	head.Title(c.title)
 

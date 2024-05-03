@@ -7,6 +7,6 @@ import (
 )
 
 func TestComponent_Render(t *testing.T) {
-	btn := NewButton().Style(css.Style{Color: "red"}).SetContent("Click me")
+	btn := NewButton("Click me").Style(css.Style{Color: "red"})
 	assert.Equal(t, "<button style=\"color:red;\">Click me</button>", btn.Render())
 }
