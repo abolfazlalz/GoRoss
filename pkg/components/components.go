@@ -26,6 +26,13 @@ func (cp ComponentProperty) String() string {
 	return " " + text
 }
 
+func firstProp[T any](props []T) (result T) {
+	if len(props) > 0 {
+		result = props[0]
+	}
+	return
+}
+
 type ComponentI interface {
 	Render() string
 	SetChildren(children ...ComponentI) ComponentI
@@ -43,6 +50,7 @@ type Component struct {
 	children   []ComponentI
 	content    string
 	TagName    string
+	ID         string
 	classes    []string
 	style      css.Style
 	attributes ComponentProperty
@@ -62,6 +70,7 @@ func (c *Component) Render() string {
 	}
 	props["class"] = strings.Join(c.classes, " ")
 	props["style"] = c.style.String()
+	props["id"] = c.ID
 
 	keys := make([]string, 0, len(props))
 	for k := range props {

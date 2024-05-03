@@ -1,0 +1,18 @@
+:root {
+    --goross-default-padding: 1rem;
+    --goross-default-gap: 1rem;
+}
+
+.goross-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--goross-default-gap);
+    padding: var(--goross-default-padding);
+}
+
+.goross-row {
+    display: flex;
+    flex-direction: row;
+    gap: var(--goross-default-gap);
+}

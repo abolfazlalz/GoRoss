@@ -9,6 +9,7 @@ type HTML struct {
 func NewHTML() *HTML {
 	return &HTML{
 		Component: &Component{},
+		title:     "GoRoss",
 		meta: map[string]string{
 			"viewport": "width=device-width, initial-scale=1.0",
 		},
@@ -32,20 +33,46 @@ func (c *HTML) DelMeta(key string) {
 	delete(c.meta, key)
 }
 
-//  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+func (c *HTML) addCss(file string) {
+	c.AddChild(&Component{TagName: "link", attributes: map[string]string{"rel": "stylesheet", "href": file}})
+}
 
 func (c *HTML) Render() string {
-	head := &Component{TagName: "head"}
+	head := NewHead()
 	html := &Component{TagName: "html"}
 
-	title := &Component{TagName: "title", content: c.title}
-	head.AddChild(title)
+	head.AddChild(NewScript().Src("/static/vue.global.js"))
+
+	head.Title(c.title)
 
 	for name, content := range c.meta {
 		head.AddChild(&Component{TagName: "meta", attributes: ComponentProperty{"name": name, "content": content}})
 	}
 
+	head.Stylesheet("/static/quasar.prod.css")
+	head.Stylesheet("/static/goross.css")
+
 	html.AddChild(head)
-	html.AddChild(c.children...)
+
+	body := &Component{TagName: "body"}
+
+	appDiv := NewDiv(DivProps{id: "app"})
+
+	layout := NewLayout()
+	appDiv.AddChild(layout)
+
+	content := NewContent()
+	content.AddChild(c.children...)
+	content.SetClass("goross-content")
+
+	layout.AddChild(content)
+
+	body.AddChild(appDiv)
+
+	body.AddChild(NewScript().Src("/static/quasar.umd.prod.js"))
+	body.AddChild(NewScript().Src("/static/tailwindcss.min.js"))
+	body.AddChild(NewScript().Src("/static/goross.js"))
+	html.AddChild(body)
+
 	return html.Render()
 }
