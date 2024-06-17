@@ -1,5 +1,7 @@
 package components
 
+import "goross/pkg/utils"
+
 type Flex struct {
 	ComponentI
 }
@@ -27,7 +29,7 @@ type FlexProps struct {
 }
 
 func NewFlex(propsOptional ...FlexProps) *Flex {
-	props := firstProp(propsOptional)
+	props := utils.FirstSliceItem(propsOptional)
 	props.AddClass("flex")
 	if props.Direction != "" {
 		props.AddClass(props.Direction.class())

@@ -1,11 +1,18 @@
 package components
 
+import (
+	"fmt"
+	"goross/pkg/utils"
+)
+
 type Button struct {
 	*Component
 }
 
 type ButtonProps struct {
+	ComponentProps
 	Color string
+	ID    string
 }
 
 func (b ButtonProps) color() string {
@@ -16,9 +23,13 @@ func (b ButtonProps) color() string {
 }
 
 func NewButton(content string, propsOptional ...ButtonProps) *Button {
-	props := firstProp(propsOptional)
-	btn := &Component{TagName: "q-btn"}
+	props := utils.FirstSliceItem(propsOptional)
+	btn := NewComponent("q-btn", props.ComponentProps)
 	btn.Attr("label", content)
 	btn.Attr("color", props.color())
-	return &Button{btn}
+
+	btn.Attr("@click", fmt.Sprintf("handleClick('%s')", props.ID))
+	btnC := &Button{btn}
+	btnC.ID = props.ID
+	return btnC
 }

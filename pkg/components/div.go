@@ -1,5 +1,7 @@
 package components
 
+import "goross/pkg/utils"
+
 type Div struct {
 	*Component
 }
@@ -17,7 +19,7 @@ func (d *DivProps) AddClass(class ...string) {
 }
 
 func NewDiv(propsOptional ...DivProps) *Button {
-	props := firstProp(propsOptional)
+	props := utils.FirstSliceItem(propsOptional)
 
 	return &Button{
 		&Component{TagName: "div", classes: props.classes, ID: props.id},

@@ -1,11 +1,13 @@
 package components
 
+import "goross/pkg/utils"
+
 type Layout struct {
 	ComponentI
 }
 
 func NewLayout(propsOptional ...DivProps) *Layout {
-	props := firstProp(propsOptional)
+	props := utils.FirstSliceItem(propsOptional)
 
 	props.classes = append(props.classes, "layout")
 

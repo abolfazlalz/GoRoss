@@ -3,11 +3,13 @@ package web
 import (
 	"embed"
 	"github.com/gin-gonic/gin"
+	"goross/pkg/websocket"
 	"net/http"
 )
 
 type Web struct {
 	*gin.Engine
+	ws *websocket.WebSocket
 }
 
 //go:embed static/*
@@ -16,12 +18,7 @@ var contentFS embed.FS
 func New() *Web {
 	return &Web{
 		Engine: assignRoutes(gin.New()),
-	}
-}
-
-func NewWithFiber(app *gin.Engine) *Web {
-	return &Web{
-		Engine: assignRoutes(app),
+		ws:     websocket.New(),
 	}
 }
 
@@ -34,5 +31,9 @@ func assignRoutes(app *gin.Engine) *gin.Engine {
 }
 
 func (http Web) Run(addr ...string) error {
+	http.ws.Init()
+	defer http.ws.Close()
+	http.Engine.GET("/socket.io/*any", gin.WrapH(http.ws.Server()))
+	http.Engine.POST("/socket.io/*any", gin.WrapH(http.ws.Server()))
 	return http.Engine.Run(addr...)
 }

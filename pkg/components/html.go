@@ -71,6 +71,7 @@ func (c *HTML) Render() string {
 
 	body.AddChild(NewScript().Src("/static/quasar.umd.prod.js"))
 	body.AddChild(NewScript().Src("/static/tailwindcss.min.js"))
+	body.AddChild(NewScript().Src("https://cdn.socket.io/socket.io-1.2.0.js"))
 	body.AddChild(NewScript().Src("/static/goross.js"))
 	html.AddChild(body)
 

@@ -3,9 +3,14 @@ package components
 import (
 	"fmt"
 	"goross/pkg/css"
+	"goross/pkg/utils"
 	"sort"
 	"strings"
 )
+
+type ComponentProps struct {
+	ID string
+}
 
 type ComponentProperty map[string]string
 
@@ -54,6 +59,14 @@ type Component struct {
 	classes    []string
 	style      css.Style
 	attributes ComponentProperty
+}
+
+func NewComponent(tagName string, cProps ...ComponentProps) *Component {
+	c := utils.FirstSliceItem(cProps)
+	return &Component{
+		TagName: tagName,
+		ID:      c.ID,
+	}
 }
 
 func (c *Component) Render() string {
