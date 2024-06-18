@@ -18,7 +18,7 @@ var contentFS embed.FS
 func New() *Web {
 	return &Web{
 		Engine: assignRoutes(gin.New()),
-		ws:     websocket.New(),
+		ws:     websocket.Instance(),
 	}
 }
 

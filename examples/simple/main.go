@@ -3,12 +3,17 @@ package main
 import (
 	"goross"
 	"goross/pkg/components"
+	"log"
 )
 
 func main() {
 	ui := goross.New()
 
-	ui.Button("Hello World", components.ButtonProps{ID: "hello1"})
+	ui.Button("Im clickable", components.ButtonProps{
+		ComponentProps: components.ComponentProps{OnClick: func() {
+			log.Println("im clickable !")
+		}},
+	})
 	ui.Button("Click me")
 
 	ui.Row(func(ui *goross.GoRoss) {

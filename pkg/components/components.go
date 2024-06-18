@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"goross/pkg/css"
 	"goross/pkg/utils"
+	"goross/pkg/websocket"
 	"sort"
 	"strings"
 )
 
 type ComponentProps struct {
-	ID string
+	ID      string
+	OnClick func()
 }
 
 type ComponentProperty map[string]string
@@ -29,13 +31,6 @@ func (cp ComponentProperty) String() string {
 		return ""
 	}
 	return " " + text
-}
-
-func firstProp[T any](props []T) (result T) {
-	if len(props) > 0 {
-		result = props[0]
-	}
-	return
 }
 
 type ComponentI interface {
@@ -62,11 +57,23 @@ type Component struct {
 }
 
 func NewComponent(tagName string, cProps ...ComponentProps) *Component {
-	c := utils.FirstSliceItem(cProps)
-	return &Component{
+	props := utils.FirstSliceItem(cProps)
+
+	component := &Component{
 		TagName: tagName,
-		ID:      c.ID,
+		ID:      props.ID,
 	}
+	if props.OnClick != nil {
+		ws := websocket.Instance()
+		ws.Subscribe(func(s string) {
+			if s == props.ID {
+				props.OnClick()
+			}
+		})
+		component.Attr("@click", fmt.Sprintf("handleClick('%s')", props.ID))
+	}
+
+	return component
 }
 
 func (c *Component) Render() string {

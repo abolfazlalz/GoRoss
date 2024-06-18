@@ -1,7 +1,6 @@
 package components
 
 import (
-	"fmt"
 	"goross/pkg/utils"
 )
 
@@ -12,7 +11,6 @@ type Button struct {
 type ButtonProps struct {
 	ComponentProps
 	Color string
-	ID    string
 }
 
 func (b ButtonProps) color() string {
@@ -28,7 +26,6 @@ func NewButton(content string, propsOptional ...ButtonProps) *Button {
 	btn.Attr("label", content)
 	btn.Attr("color", props.color())
 
-	btn.Attr("@click", fmt.Sprintf("handleClick('%s')", props.ID))
 	btnC := &Button{btn}
 	btnC.ID = props.ID
 	return btnC

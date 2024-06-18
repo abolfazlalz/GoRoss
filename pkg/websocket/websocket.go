@@ -2,18 +2,31 @@ package websocket
 
 import (
 	"github.com/googollee/go-socket.io"
+	"goross/pkg/events"
 	"log"
 	"net/http"
 )
 
 type WebSocket struct {
+	*events.AbstractEventListener[string]
 	server *socketio.Server
 }
 
+var ws *WebSocket
+
 func New() *WebSocket {
-	return &WebSocket{
-		server: socketio.NewServer(nil),
+	ws = &WebSocket{
+		server:                socketio.NewServer(nil),
+		AbstractEventListener: events.NewAbstractEventListener[string](),
 	}
+	return ws
+}
+
+func Instance() *WebSocket {
+	if ws == nil {
+		return New()
+	}
+	return ws
 }
 
 func (ws *WebSocket) Server() *socketio.Server {
@@ -50,6 +63,10 @@ func (ws *WebSocket) handleBye(s socketio.Conn) string {
 	return last
 }
 
+func (ws *WebSocket) handleAction(s socketio.Conn, msg string) {
+	ws.Notify(msg)
+}
+
 func (ws *WebSocket) handleError(s socketio.Conn, e error) {
 	log.Println("meet error:", e)
 }
@@ -64,6 +81,8 @@ func (ws *WebSocket) Init() {
 	ws.server.OnEvent("/", "notice", ws.handleNotice)
 
 	ws.server.OnEvent("/", "click", ws.handleClick)
+
+	ws.server.OnEvent("/", "action", ws.handleAction)
 
 	ws.server.OnEvent("/chat", "msg", ws.handleChat)
 

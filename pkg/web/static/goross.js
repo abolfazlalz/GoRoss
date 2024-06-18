@@ -15,8 +15,7 @@ const app = createApp({
         });
 
         const handleClick = (id) => {
-            console.log(id);
-            socket.emit('click', id);
+            socket.emit('action', id);
         }
 
         return {
